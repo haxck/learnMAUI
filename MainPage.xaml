@@ -10,6 +10,11 @@
             Padding="30,0"
             VerticalOptions="Center">
 
+            <Entry Text="{Binding Result}"></Entry>
+            <Button Command="{Binding ReadCommand}" Text="读"></Button>
+            <Button Command="{Binding WriteCommand}" Text="写"></Button>
+
+
             <Label Text="{Binding Result}"></Label>
             <Button Command="{Binding ClickMeCommand}" Text="ClickMe"></Button>
         </VerticalStackLayout>
