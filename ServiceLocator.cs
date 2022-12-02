@@ -24,7 +24,9 @@ namespace MauiApp1
             /*  将MainPageViewModels 放到 serviceCollection 中 */
             serviceCollection.AddSingleton<MainPageViewModels>();
             /*  将接口类与实现类放到 serviceCollection */
-            serviceCollection.AddSingleton<IKeyValueStorage,KeyValueStorege>();
+            serviceCollection.AddSingleton<IKeyValueStorage, KeyValueStorege>();
+
+            serviceCollection.AddSingleton<IPoetryStorage, PoetryStorege>();
             _serviceProvider = serviceCollection.BuildServiceProvider();
         }
     }

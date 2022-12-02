@@ -1,35 +1,47 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MauiApp1.Models;
 using MauiApp1.Services;
+using System.Collections.ObjectModel;
 
 namespace MauiApp1.ViewModels;
 
 public class MainPageViewModels : ObservableObject
 {
-    private string _result = string.Empty;
+    private IPoetryStorage _poetryStorage;
 
-    public string Result
+    public MainPageViewModels(IPoetryStorage poetryStorage)
     {
-        get => _result;
-        set => SetProperty(ref _result, value);
+        _poetryStorage = poetryStorage;
     }
+/* ？？？ */
+    public ObservableCollection<Poetry> Poetries { get; } = new ObservableCollection<Poetry>();
 
-    private IKeyValueStorage _keyValueStorage;
-    public MainPageViewModels(IKeyValueStorage KeyValueStorage){
-        _keyValueStorage = KeyValueStorage;
-    }
+    private RelayCommand _initializeCommand;
+    public RelayCommand InitializeCommand =>
+        _initializeCommand ??= new RelayCommand(async () =>
+        {
+            await _poetryStorage.InitializeAsync();
+        });
 
+    private RelayCommand _addCommand;
+    public RelayCommand AddCommand => _addCommand ??= new RelayCommand(async () =>
+    {
 
-    private RelayCommand _readCommand;
-    public RelayCommand ReadCommand => _readCommand ??= new RelayCommand(() => Result = _keyValueStorage.Get("Mykey", string.Empty));
+        await _poetryStorage.AddAsync(new Poetry
+        {
+            Title = "Title",
+            Content = "Content"
+        });
+    });
 
-
-    private RelayCommand _writeCommand;
-    public RelayCommand WriteCommand => _writeCommand ?? new RelayCommand(() => _keyValueStorage.Set("Mykey",Result));
-
-
-
-    private RelayCommand _clickMeCommand;
-    public RelayCommand ClickMeCommand => _clickMeCommand ??= new RelayCommand(() => Result = "hello world");
-
+    private RelayCommand _listCommand;
+    public RelayCommand ListCommand => _listCommand ??= new RelayCommand(async () =>
+    {
+        var list = await _poetryStorage.ListAsync();
+        foreach (var item in list)
+        {
+            Poetries.Add(item); //不懂
+        }
+    });
 }
